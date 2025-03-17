@@ -1,14 +1,14 @@
 import jwt from "jsonwebtoken"
 
 const authMiddleware = async (req, res, next) => {
-    const { autherization } = req.header
+    const { authorization } = req.headers
 
-    if (!autherization || !autherization.startwith("Bearer ")) {
+    if (!authorization || !authorization.startsWith("Bearer ")) {
         return res.status(400).json({
-            message: "not valid autherization"
+            message: "not valid authorization"
         })
     }
-    const token = autherization.split(" ")[1]
+    const token = authorization.split(" ")[1]
 
     const isVerified = jwt.verify(token, process.env.JWT_SECRET)
     if (!isVerified.userId) {
