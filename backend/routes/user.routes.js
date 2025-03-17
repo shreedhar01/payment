@@ -2,22 +2,18 @@ import { Router } from "express"
 import zod from "zod"
 import { userModel } from "../db.js"
 import jwt from "jsonwebtoken"
-import JWT_SECRET from "../config.js"
+import { authMiddleware } from "../middleware.js"
+import { asyncHandler } from "../helper.js"
 
 const router = Router()
 
 const signupSchema = zod.object({
     userName: zod.string().email(),
     fullName: zod.string(),
-    password: zod.string()
+    password: zod.string().min(8,{message:"password must be at least 8 character"})
 })
 
-const signinSchema = zod.object({
-    userName: zod.string().email(),
-    password: zod.string()
-})
-
-router.post("/signup", async (req, res) => {
+router.post("/signup", asyncHandler(async(req, res) => {
     const { userName, password, fullName } = req.body
 
     const { success } = signupSchema.safeParse(req.body)
@@ -48,15 +44,20 @@ router.post("/signup", async (req, res) => {
     }
     const token = jwt.sign({
         userId: user._id
-    }, JWT_SECRET)
+    }, process.env.JWT_SECRET)
 
     return res.status(200).json({
         message: "user created successfully",
         token: token
     })
+}))
+
+const signinSchema = zod.object({
+    userName: zod.string().email(),
+    password: zod.string().min(8,{message:"password must be at least 8 character"})
 })
 
-router.get("/signin", async (req, res) => {
+router.get("/signin", asyncHandler( async(req, res) => {
     const { userName, password } = req.body
     const { success } = signinSchema.safeParse(req.body)
     if (!success) {
@@ -77,11 +78,51 @@ router.get("/signin", async (req, res) => {
 
     const token = jwt.sign({
         userId: user._id
-    }, JWT_SECRET)
+    }, process.env.JWT_SECRET)
     res.status(200).json({
         message: "login successfully",
         token: token
     })
-})
+}))
+
+const updateSchema = zod.object({
+    userName: zod.string().email().optional(),
+    fullName: zod.string().optional(),
+    password: zod.string().min(8,{message:"password must be at least 8 character"}).optional(),
+}).refine(data => {
+    return Object.values(data).some(
+        value =>  value !== undefined && value !== null && value.trim() !== ''
+    )
+},{message: "At least one field must have value"})
+
+router.patch("/", authMiddleware, asyncHandler( async(req, res) => {
+    const { success, data, error } = updateSchema.safeParse(req?.body)
+
+    if (!success) {
+        return res.json({
+            message: error.message || "At least one field must have a non-empty value"
+        })
+    }
+
+    const isUserExist = await userModel.findById(req.userId)
+    if (!isUserExist) {
+        return res.json({
+            message: "user doesnt exist"
+        })
+    }
+
+    const updateData = await userModel.findByIdAndUpdate(req.userId, {
+        $set: data
+    },{new : true})
+    if(!updateData){
+        return res.json({
+            message:"update unsuccess"
+        })
+    }
+
+    return res.status(200).json({
+        message: "User updated successfully"
+    });
+}))
 
 export default router
