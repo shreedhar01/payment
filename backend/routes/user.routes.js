@@ -75,7 +75,7 @@ const signinSchema = zod.object({
     password: zod.string().min(8, { message: "password must be at least 8 character" })
 })
 
-router.get("/signin", asyncHandler(async (req, res) => {
+router.post("/signin", asyncHandler(async (req, res) => {
     const { userName, password } = req.body
     const { success } = signinSchema.safeParse(req.body)
     if (!success) {
