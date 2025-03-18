@@ -10,6 +10,12 @@ app.use(express.json())
 
 app.use("/api/v1", route)
 
-app.listen(8000)
-
-
+// For local development only
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(8000, () => {
+      console.log('Server running on port 8000');
+    });
+  }
+  
+  // For Vercel serverless deployment
+  export default app
