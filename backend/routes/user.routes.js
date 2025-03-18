@@ -21,7 +21,6 @@ router.post("/signup", asyncHandler(async (req, res) => {
     const { userName, password, fullName } = req.body
 
     const { success } = signupSchema.safeParse(req.body)
-    console.log(signupSchema.safeParse(req.body));
 
     if (!success) {
         return res.status(400).json({
@@ -138,7 +137,7 @@ router.patch("/", authMiddleware, asyncHandler(async (req, res) => {
             message: "update unsuccess"
         })
     }
-
+    
     return res.status(200).json({
         message: "User updated successfully"
     });
