@@ -2,8 +2,8 @@ import React from 'react'
 
 function Button({onClick, title}) {
   return (
-    <div className=' flex justify-center items-center'>
-      <button onClick={onClick} className=' bg-green-400 hover:bg-green-200 rounded' > {title} </button>
+    <div className='p-[4px] m-[6px] flex justify-center items-center bg-green-400 hover:bg-green-200 rounded '>
+      <button onClick={onClick} className='' > {title} </button>
     </div>
   )
 }
