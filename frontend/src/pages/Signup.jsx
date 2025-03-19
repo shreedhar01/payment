@@ -27,7 +27,7 @@ function Signup() {
       })
 
       localStorage.setItem("token", res.data.token)
-      navigate("/Dashboard")
+      navigate("/dashboard")
     } catch (error) {
       setError(error?.response?.data?.error)
     }
@@ -45,7 +45,7 @@ function Signup() {
         <ErrorMessage message={error} />
         <div className='flex gap-1' >
           <p>Already Have a account? </p>
-          <Link className=' underline' to="/Signin">
+          <Link className=' underline' to="/signin">
             Signin
           </Link>
         </div>
