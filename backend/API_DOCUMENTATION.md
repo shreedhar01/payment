@@ -144,6 +144,22 @@ The token is provided after successful signup or signin.
 }
 ```
 
+#### Get current user details
+- **URL**: `/api/v1/user/`
+- **Method**: `GET`
+- **Auth Required**: Yes
+- **Success Response**: 
+```json
+{
+  "message": "user details fetched successfully",
+  "data": {
+    "_id": "user_id",
+    "fullName": "John Doe",
+    "userName": "user@example.com"
+  }
+}
+```
+
 ### Account Routes
 
 #### Get balance
@@ -183,7 +199,7 @@ The API returns appropriate HTTP status codes and error messages in JSON format:
 ```json
 {
   "success": false,
-  "message": "Error message"
+  "error": "Error message"
 }
 ```
 

@@ -24,14 +24,14 @@ router.post("/signup", asyncHandler(async (req, res) => {
 
     if (!success) {
         return res.status(400).json({
-            message: "any of the field is empty"
+            error: "any of the field is empty"
         })
     }
 
     const isUserExist = await userModel.findOne({ userName: userName })
     if (isUserExist) {
         return res.status(400).json({
-            message: " user already exist"
+            error: " user already exist"
         })
     }
 
@@ -42,7 +42,7 @@ router.post("/signup", asyncHandler(async (req, res) => {
     })
     if (!user) {
         return res.status(500).json({
-            message: "user not created"
+            error: "user not created"
         })
     }
     const token = jwt.sign({
@@ -50,7 +50,7 @@ router.post("/signup", asyncHandler(async (req, res) => {
     }, process.env.JWT_SECRET)
     if (!token) {
         return res.status(400).json({
-            message: "token not generated"
+            error: "token not generated"
         })
     }
 
@@ -60,7 +60,7 @@ router.post("/signup", asyncHandler(async (req, res) => {
     })
     if(!balanceAdded){
         return res.status(200).json({
-            message : "balance added unsuccess"
+            error: "balance added unsuccess"
         })
     }
 
@@ -80,7 +80,7 @@ router.post("/signin", asyncHandler(async (req, res) => {
     const { success } = signinSchema.safeParse(req.body)
     if (!success) {
         return res.status(400).json({
-            message: "pass valid string"
+            error: "pass valid string"
         })
     }
 
@@ -90,7 +90,7 @@ router.post("/signin", asyncHandler(async (req, res) => {
     })
     if (!user) {
         return res.status(404).json({
-            message: " user not found "
+            error: "user not found" // Changed from message to error for consistency
         })
     }
 
@@ -103,6 +103,21 @@ router.post("/signin", asyncHandler(async (req, res) => {
     })
 }))
 
+router.get("/", authMiddleware, asyncHandler(async (req, res) => {
+    const user = await userModel.findById(req.userId, { password: 0 });
+    
+    if (!user) {
+        return res.status(404).json({
+            error: "user not found"
+        });
+    }
+    
+    return res.status(200).json({
+        message: "user details fetched successfully",
+        data: user
+    });
+}));
+
 const updateSchema = zod.object({
     userName: zod.string().email().optional(),
     fullName: zod.string().optional(),
@@ -113,19 +128,20 @@ const updateSchema = zod.object({
     )
 }, { message: "At least one field must have value" })
 
+
 router.patch("/", authMiddleware, asyncHandler(async (req, res) => {
     const { success, data, error } = updateSchema.safeParse(req?.body)
 
     if (!success) {
-        return res.json({
-            message: error.message || "At least one field must have a non-empty value"
+        return res.status(400).json({
+            error: error.message || "At least one field must have a non-empty value"
         })
     }
 
     const isUserExist = await userModel.findById(req.userId)
     if (!isUserExist) {
-        return res.json({
-            message: "user doesnt exist"
+        return res.status(404).json({
+            error: "user doesn't exist"
         })
     }
 
@@ -133,8 +149,8 @@ router.patch("/", authMiddleware, asyncHandler(async (req, res) => {
         $set: data
     }, { new: true })
     if (!updateData) {
-        return res.json({
-            message: "update unsuccess"
+        return res.status(500).json({
+            error: "update unsuccessful"
         })
     }
     
@@ -148,7 +164,7 @@ router.get("/bulk", authMiddleware, asyncHandler(async (req, res) => {
     const { filter } = req.query
     if (!filter) {
         return res.status(400).json({
-            message: "provide valid input"
+            error: "provide valid input"
         })
     }
 
@@ -166,7 +182,7 @@ router.get("/bulk", authMiddleware, asyncHandler(async (req, res) => {
 
     if (!filterUser.length) {
         return res.status(404).json({
-            message: "user not found"
+            error: "user not found"
         })
     }
 

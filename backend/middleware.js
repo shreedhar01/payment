@@ -5,7 +5,7 @@ const authMiddleware = async (req, res, next) => {
 
     if (!authorization || !authorization.startsWith("Bearer ")) {
         return res.status(400).json({
-            message: "not valid authorization"
+            error: "not valid authorization"
         })
     }
     const token = authorization.split(" ")[1]
@@ -13,7 +13,7 @@ const authMiddleware = async (req, res, next) => {
     const isVerified = jwt.verify(token, process.env.JWT_SECRET)
     if (!isVerified.userId) {
         return res.json({
-            message: "verification fail"
+            error: "verification fail"
         })
     }
     req.userId = isVerified.userId

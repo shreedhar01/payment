@@ -10,7 +10,7 @@ router.get("/balance", authMiddleware, asyncHandler(async (req, res) => {
     const balance = await accountModel.findOne({ userId: req.userId })
     if (!balance) {
         return res.status(404).json({
-            message: "account not found"
+            error: "account not found"
         })
     }
     res.status(200).json({
@@ -29,7 +29,7 @@ router.patch("/transfer", authMiddleware, asyncHandler(async (req, res) => {
     if (!isFromExist || isFromExist.balance < amount) {
         trackTime.abortTransaction()
         return res.status(400).json({
-            message: "not enough balance"
+            error: "not enough balance"
         })
     }
 
@@ -37,7 +37,7 @@ router.patch("/transfer", authMiddleware, asyncHandler(async (req, res) => {
     if (!isToExist) {
         trackTime.abortTransaction()
         return res.status(404).json({
-            message: "user not found"
+            error: "user not found"
         })
     }
 
@@ -45,14 +45,14 @@ router.patch("/transfer", authMiddleware, asyncHandler(async (req, res) => {
     if (!from) {
         trackTime.abortTransaction()
         return res.status(404).json({
-            message: "transiction fail"
+            error: "transiction fail"
         })
     }
     const too = await accountModel.findByIdAndUpdate(isToExist._id, { $inc: { balance: amount } }).session(trackTime)
     if (!too) {
         trackTime.abortTransaction()
         return res.status(404).json({
-            message: "transiction fail"
+            error: "transiction fail"
         })
     }
     
