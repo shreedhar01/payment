@@ -6,12 +6,8 @@ import {
   ErrorMessage
 } from "../components"
 import axios from "axios"
-import { Link, Navigate, useNavigate } from "react-router-dom"
-import {
-  Signin,
-  Dashboard,
-  Send
-} from "./index"
+import { Link, useNavigate } from "react-router-dom"
+
 
 function Signup() {
   const [fullName, setFullName] = useState("")
