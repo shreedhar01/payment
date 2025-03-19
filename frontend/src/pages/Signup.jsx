@@ -39,7 +39,7 @@ function Signup() {
       <div className='bg-amber-100 w-full max-w-md p-6 rounded-lg shadow-md '>
         <Header title="Signup" />
         <InputBox onChange={e => setFullName(e.target.value)} title="Full Name" typee="text" placeholder="ram magar" />
-        <InputBox onChange={e => setUserName(e.target.value)} title="UserName" typee="email" placeholder="user@gmail.com" />
+        <InputBox onChange={e => setUserName(e.target.value)} title="Email" typee="email" placeholder="user@gmail.com" />
         <InputBox onChange={e => setPassword(e.target.value)} title="Password" typee="password" placeholder="password" />
         <Button onClick={handleSignup} title="Signup" />
         <ErrorMessage message={error} />

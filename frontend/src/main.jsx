@@ -7,12 +7,14 @@ import {
   Signin,
   Signup,
   Dashboard,
-  Send
+  Send,
+  LandingPage
 } from "./pages"
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Routes>
+      <Route path='/' element={ <LandingPage/> } />
       <Route path='/signin' element={ <Signin/> } />
       <Route path='/signup' element={ <Signup/> } />
       <Route path='/dashboard' element={ <Dashboard/> } />
