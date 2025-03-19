@@ -1,7 +1,7 @@
-# PayTM Clone Backend API Documentation
+# Simple Payment Backend API Documentation
 
 ## Overview
-This API powers a simple PayTM clone allowing users to register, sign in, check balances, and transfer money between accounts. The API is built with Express.js, MongoDB, and uses JWT for authentication.
+This API powers a Simple Payment application allowing users to register, sign in, check balances, and transfer money between accounts. The API is built with Express.js, MongoDB, and uses JWT for authentication.
 
 ## Base URL
 The API is deployed and accessible at:
