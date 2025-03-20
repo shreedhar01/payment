@@ -104,7 +104,8 @@ router.post("/signin", asyncHandler(async (req, res) => {
 }))
 
 router.get("/", authMiddleware, asyncHandler(async (req, res) => {
-    const user = await userModel.findById(req.userId, { password: 0 });
+    const user = await userModel.findById(req.userId).select("-password");
+    const balance = await accountModel.findOne({userId:user._id})
     
     if (!user) {
         return res.status(404).json({
@@ -114,7 +115,8 @@ router.get("/", authMiddleware, asyncHandler(async (req, res) => {
     
     return res.status(200).json({
         message: "user details fetched successfully",
-        data: user
+        data: user,
+        balance : balance
     });
 }));
 
