@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import {
   Header,
   InputBox,
@@ -11,6 +11,7 @@ import axios from 'axios'
 
 function Send() {
   const [params] = useSearchParams()
+  const navigate = useNavigate()
   const id = params.get("id")
   const name = params.get("name")
   const [amount, setAmount] = useState("")
@@ -30,7 +31,6 @@ function Send() {
       }).then(res => {
         setError(res?.data?.message)
         console.log(res);
-
       })
     } catch (err) {
       setError(err.response?.data?.error)
@@ -38,28 +38,52 @@ function Send() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavigationBar />
-      <div className=' flex justify-center items-center'>
-        <div className=' bg-amber-100 gap-3'>
+      <div className="flex-1 flex justify-center items-center p-4">
+        <div className="bg-amber-100 rounded-lg shadow-md w-full max-w-md p-6">
           <Header title="Send Money" />
-          <div className=' flex gap-2 mt-10'>
-            <div className='peer h-10 w-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-medium cursor-pointer hover:bg-amber-700'>
-              <span>{name?.[0]}</span>
+          
+          <div className="mt-6 mb-6 flex items-center gap-3 p-3 bg-amber-50 rounded-lg">
+            <div className="h-12 w-12 bg-amber-600 rounded-full flex items-center justify-center text-white font-semibold shadow-sm">
+              <span className="text-lg">{name?.[0]?.toUpperCase() || "A"}</span>
             </div>
-            <h1 className='flex justify-center items-center'>{name}</h1>
+            <div>
+              <h3 className="text-lg font-medium text-amber-800">
+                {name}
+              </h3>
+              <p className="text-sm text-amber-600">Recipient</p>
+            </div>
           </div>
-          <InputBox
-            title="Amount in (Rs)"
-            placeholder="Enter amount"
-            typee="text"
-            onChange={e => setAmount(e.target.value)}
-          />
-          <Button onClick={handleClick} title="Send" />
-          <ErrorMessage message={error} />
+          
+          <div className="space-y-4">
+            <InputBox
+              title="Amount in (Rs)"
+              placeholder="Enter amount"
+              typee="text"
+              onChange={e => setAmount(e.target.value)}
+            />
+            
+            <div className="pt-2">
+              <Button onClick={handleClick} title="Send Money" />
+            </div>
+            
+            <div className="pt-1">
+              <ErrorMessage message={error} />
+            </div>
+            
+            <div className="pt-2 text-center">
+              <button 
+                onClick={() => navigate('/dashboard')} 
+                className="text-amber-700 text-sm hover:underline"
+              >
+                Cancel and return to Dashboard
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

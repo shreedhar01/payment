@@ -39,35 +39,47 @@ function Dashboard() {
   }, [search])
   return (
     <div>
-      <div className=' p-[3px]'>
+      <div className='p-[3px]'>
 
         {/* navigation bar */}
         <NavigationBar user={user} />
 
         {/* user */}
-        <div className='"mt-4 p-4 mx-auto '>
+        <div className='mt-4 p-4 mx-auto'>
           <h1 className='text-xl font-bold text-amber-800'>Your Balance is: Rs{user?.balance?.balance}</h1>
         </div>
 
         {/* search for users */}
-        <div>
-          <input  onChange={(e) => setSearch(e.target.value)} className=' border ml-2 mb-2' type="text" placeholder='search user' />
-          {/* learning of the day first i use bulk?.length && bulk.map(...) mystery zero appear reason no length it mean false. So i use ternary operator  */}
-          {bulk?.length > 0 ? bulk.map(b => (
-            <div className=' max-h-100 bg-green-400 flex justify-between m-[6px] rounded' key={b._id}>
-              <span className=' flex justify-center items-center gap-1'>
-                <div className='peer h-10 w-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-medium cursor-pointer hover:bg-amber-700'>
-                  <span>{b?.fullName?.[0] || "a"}</span>
-                </div>
-                {b.fullName}</span>
-              <button onClick={e=>{
-                navigator(`/send?id=${b._id}&name=${b.fullName}`)
-              }} className="bg-amber-600 text-white px-3 py-1 rounded text-sm hover:bg-amber-700">
-                Send Money
-              </button>
-            </div>
-          )
-          ): null}
+        <div className="px-4 mt-6">
+          <div className="relative">
+            <input 
+              onChange={(e) => setSearch(e.target.value)} 
+              className='w-full border border-amber-200 rounded-lg p-3 pl-4 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent' 
+              type="text" 
+              placeholder='Search users by name...' 
+            />
+          </div>
+          
+          <div className="mt-4 space-y-3">
+            {bulk?.length > 0 ? bulk.map(b => (
+              <div className='bg-amber-50 border border-amber-200 flex justify-between items-center p-3 rounded-lg shadow-sm' key={b._id}>
+                <span className='flex justify-center items-center gap-3'>
+                  <div className='h-10 w-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-medium cursor-pointer hover:bg-amber-700 transition-colors'>
+                    <span>{b?.fullName?.[0]?.toUpperCase() || "A"}</span>
+                  </div>
+                  <span className="font-medium text-amber-800">{b.fullName}</span>
+                </span>
+                <button 
+                  onClick={e => {
+                    navigator(`/send?id=${b._id}&name=${b.fullName}`)
+                  }} 
+                  className="bg-amber-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-amber-700 transition-colors shadow-sm font-medium"
+                >
+                  Send Money
+                </button>
+              </div>
+            )) : null}
+          </div>
         </div>
       </div>
     </div>
