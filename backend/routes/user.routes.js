@@ -7,6 +7,7 @@ import {
 import jwt from "jsonwebtoken"
 import { authMiddleware } from "../middleware.js"
 import { asyncHandler } from "../helper.js"
+import mongoose from "mongoose"
 
 
 const router = Router()
@@ -177,7 +178,7 @@ router.get("/bulk", authMiddleware, asyncHandler(async (req, res) => {
         {
             $match: {
                 fullName: { $regex: sanitizedFilter, $options: "i" },
-                _id: { $ne: mongoose.Types.ObjectId(req.userId) }
+                _id: { $ne: new mongoose.Types.ObjectId(req.userId) }
             }
         },
         {

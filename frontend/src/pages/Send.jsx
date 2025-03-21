@@ -24,7 +24,7 @@ function Send() {
     setError("")
     try {
       const token = localStorage.getItem("token")
-      await axios.patch("http://localhost:8000/api/v1/account/transfer", {
+      await axios.patch("https://paymentbackend002.vercel.app/api/v1/account/transfer", {
         to: id,
         amount: parseInt(amount)
       }, {
@@ -35,7 +35,7 @@ function Send() {
         setError(res?.data?.message)
       })
 
-      await axios.get("http://localhost:8000/api/v1/user/", {
+      await axios.get("https://paymentbackend002.vercel.app/api/v1/user/", {
         headers: {
           Authorization: `Bearer ${token}`
         }

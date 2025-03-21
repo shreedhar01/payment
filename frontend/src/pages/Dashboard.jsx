@@ -15,7 +15,7 @@ function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token")
-    axios.get("http://localhost:8000/api/v1/user/", {
+    axios.get("https://paymentbackend002.vercel.app/api/v1/user/", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -28,7 +28,7 @@ function Dashboard() {
   useEffect(() => {
     if (!search) return;
     const token = localStorage.getItem("token")
-    axios.get("http://localhost:8000/api/v1/user/bulk", {
+    axios.get("https://paymentbackend002.vercel.app/api/v1/user/bulk", {
       headers: {
         authorization: `Bearer ${token}`
       },
