@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 function NavigationBar() {
   const [showDropdown, setShowDropdown] = useState(false);
   const user = useSelector(state => state.user.userData)
+  const navigator = useNavigate()
   
   return (
     <nav className="sticky top-0 z-50 bg-gradient-to-r from-amber-50 to-amber-100 shadow-md px-4 py-3">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo/Brand */}
         <Link to="/dashboard" className="flex items-center space-x-2">
-          <div className="bg-amber-600 text-white h-8 w-8 rounded-full flex items-center justify-center">
+          <div className=" hidden sm:flex bg-amber-600 text-white h-8 w-8 rounded-full  items-center justify-center">
             <span className="font-bold">P</span>
           </div>
-          <h1 className="font-bold text-2xl text-amber-800 hidden sm:block">Payment App</h1>
+          <h1 className="font-bold text-2xl text-amber-800 ">Payment App</h1>
         </Link>
         
         {/* User Section */}
@@ -53,7 +54,7 @@ function NavigationBar() {
                   </Link>
                   <button onClick={() => {
                     localStorage.removeItem("token");
-                    window.location.href = "/signin";
+                    navigator("/")
                   }} className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                     Sign out
                   </button>
