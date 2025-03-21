@@ -3,17 +3,6 @@
 ## Overview
 This API powers a Simple Payment application allowing users to register, sign in, check balances, and transfer money between accounts. The API is built with Express.js, MongoDB, and uses JWT for authentication.
 
-## Base URL
-The API is deployed and accessible at:
-```
-https://payment-eta-ruddy.vercel.app
-```
-
-All endpoints should be prefixed with this base URL. For example:
-```
-https://payment-eta-ruddy.vercel.app/api/v1/user/signin
-```
-
 ## Table of Contents
 - [Setup Instructions](#setup-instructions)
 - [Authentication](#authentication)
