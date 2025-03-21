@@ -8,6 +8,8 @@ import {
   NavigationBar
 } from "../components"
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { store } from '../store/userSlice'
 
 function Send() {
   const [params] = useSearchParams()
@@ -16,6 +18,7 @@ function Send() {
   const name = params.get("name")
   const [amount, setAmount] = useState("")
   const [error, setError] = useState("")
+  const dispatch = useDispatch()
 
   const handleClick = async () => {
     setError("")
@@ -30,7 +33,14 @@ function Send() {
         },
       }).then(res => {
         setError(res?.data?.message)
-        console.log(res);
+      })
+
+      await axios.get("http://localhost:8000/api/v1/user/", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then(res => {
+        dispatch(store({ userData: res.data }))
       })
     } catch (err) {
       setError(err.response?.data?.error)

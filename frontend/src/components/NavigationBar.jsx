@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom"
 
-function NavigationBar({ user }) {
+function NavigationBar() {
   const [showDropdown, setShowDropdown] = useState(false);
+  const user = useSelector(state => state.user.userData)
   
   return (
     <nav className="sticky top-0 z-50 bg-gradient-to-r from-amber-50 to-amber-100 shadow-md px-4 py-3">
