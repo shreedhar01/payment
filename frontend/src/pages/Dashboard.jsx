@@ -27,25 +27,29 @@ function Dashboard() {
 
   useEffect(() => {
     if (!search) return;
-    const token = localStorage.getItem("token")
-    axios.get("https://paymentbackend002.vercel.app/api/v1/user/bulk", {
-      headers: {
-        authorization: `Bearer ${token}`
-      },
-      params: {
-        filter: search
-      }
-    }).then(res => {
-      setBulk(res?.data?.data)
-      console.log(res);
-    })
+    const getData = setTimeout(() => {
+      const token = localStorage.getItem("token")
+      axios.get("https://paymentbackend002.vercel.app/api/v1/user/bulk", {
+        headers: {
+          authorization: `Bearer ${token}`
+        },
+        params: {
+          filter: search
+        }
+      }).then(res => {
+        setBulk(res?.data?.data)
+        console.log(res);
+      })
+    }, 2000)
+
+    return () => clearTimeout(getData)
   }, [search])
   return (
     <div>
       <div className='p-[3px]'>
 
         {/* navigation bar */}
-        <NavigationBar/>
+        <NavigationBar />
 
         {/* user */}
         <div className='mt-4 p-4 mx-auto'>
