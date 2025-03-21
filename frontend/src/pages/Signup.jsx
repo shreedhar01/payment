@@ -20,7 +20,7 @@ function Signup() {
     try {
       setIsLoading(true)
       setError("")
-      const res = await axios.post("http://localhost:8000/api/v1/user/signup", {
+      const res = await axios.post("https://paymentbackend002.vercel.app/api/v1/user/signup", {
         fullName,
         userName,
         password

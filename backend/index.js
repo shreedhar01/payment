@@ -7,10 +7,13 @@ const app = express()
 
 app.use(cors({
   origin: "*",
-  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE','OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
+// Add explicit handler for OPTIONS requests
+app.options('*', cors());
+
 app.use(express.json())
 
 app.use("/api/v1", route)
