@@ -55,10 +55,10 @@ router.post("/signup", asyncHandler(async (req, res) => {
     }
 
     const balanceAdded = await accountModel.create({
-        userId : user._id,
+        userId: user._id,
         balance: Math.floor(Math.random() * 10000) + 1
     })
-    if(!balanceAdded){
+    if (!balanceAdded) {
         return res.status(200).json({
             error: "balance added unsuccess"
         })
@@ -105,18 +105,18 @@ router.post("/signin", asyncHandler(async (req, res) => {
 
 router.get("/", authMiddleware, asyncHandler(async (req, res) => {
     const user = await userModel.findById(req.userId).select("-password");
-    const balance = await accountModel.findOne({userId:user._id})
-    
+    const balance = await accountModel.findOne({ userId: user._id })
+
     if (!user) {
         return res.status(404).json({
             error: "user not found"
         });
     }
-    
+
     return res.status(200).json({
         message: "user details fetched successfully",
         data: user,
-        balance : balance
+        balance: balance
     });
 }));
 
@@ -155,7 +155,7 @@ router.patch("/", authMiddleware, asyncHandler(async (req, res) => {
             error: "update unsuccessful"
         })
     }
-    
+
     return res.status(200).json({
         message: "User updated successfully"
     });
@@ -170,16 +170,23 @@ router.get("/bulk", authMiddleware, asyncHandler(async (req, res) => {
         })
     }
 
+    // Sanitize filter input for regex to prevent ReDoS attacks
+    const sanitizedFilter = filter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
     const filterUser = await userModel.aggregate([
         {
-            $match: { fullName: { $regex: filter, $options: "i" } }
+            $match: {
+                fullName: { $regex: sanitizedFilter, $options: "i" },
+                _id: { $ne: mongoose.Types.ObjectId(req.userId) }
+            }
         },
         {
             $project: {
                 _id: 1,
                 fullName: 1
             }
-        }
+        },
+        { $limit: 10 }
     ])
 
     if (!filterUser.length) {
