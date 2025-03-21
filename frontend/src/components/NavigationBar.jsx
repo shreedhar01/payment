@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom"
+import { logout } from '../store/authSlice';
 
 function NavigationBar() {
   const [showDropdown, setShowDropdown] = useState(false);
   const user = useSelector(state => state.user.userData)
   const navigator = useNavigate()
+  const dispatchor = useDispatch()
   
   return (
     <nav className="sticky top-0 z-50 bg-gradient-to-r from-amber-50 to-amber-100 shadow-md px-4 py-3">
@@ -54,6 +56,7 @@ function NavigationBar() {
                   </Link>
                   <button onClick={() => {
                     localStorage.removeItem("token");
+                    dispatchor(logout({status : false}))
                     navigator("/")
                   }} className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                     Sign out

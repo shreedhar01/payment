@@ -7,6 +7,9 @@ import {
 } from "../components/index.js"
 import axios from 'axios'
 import {Link, useNavigate} from "react-router-dom"
+import { useDispatch } from 'react-redux'
+import { login } from '../store/authSlice.js'
+
 
 function Signin() {
   const [email, setEmail] = useState("")
@@ -14,6 +17,7 @@ function Signin() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const navigator = useNavigate()
+  const dispatch = useDispatch()
 
   const handleClick = async () => {
     try {
@@ -24,6 +28,7 @@ function Signin() {
         password
       })
       localStorage.setItem("token", res.data.token)
+      dispatch(login({status : true}))
       navigator("/dashboard")
     } catch (error) {
       setError(error?.response?.data?.error)

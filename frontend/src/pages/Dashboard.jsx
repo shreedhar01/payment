@@ -11,10 +11,19 @@ function Dashboard() {
   const [bulk, setBulk] = useState([])
   const navigator = useNavigate()
   const user = useSelector(state => state.user.userData)
+  const auth = useSelector(state => state.auth.status)
 
+  useEffect(() => {
+    if (!auth && !localStorage.getItem("token")) {
+      navigator("/")
+    }
+  }, [auth, navigator])
 
   useEffect(() => {
     const token = localStorage.getItem("token")
+
+    if (!token) return
+
     axios.get("https://paymentbackend002.vercel.app/api/v1/user/", {
       headers: {
         Authorization: `Bearer ${token}`
@@ -22,13 +31,14 @@ function Dashboard() {
     }).then(res => {
       dispatch(store({ userData: res.data }))
     })
-      .catch(err => console.error("Error fetching user data:", err))
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (!search) return;
     const getData = setTimeout(() => {
       const token = localStorage.getItem("token")
+      if (!token) return
+  
       axios.get("https://paymentbackend002.vercel.app/api/v1/user/bulk", {
         headers: {
           authorization: `Bearer ${token}`
@@ -38,9 +48,8 @@ function Dashboard() {
         }
       }).then(res => {
         setBulk(res?.data?.data)
-        console.log(res);
       })
-    }, 2000)
+    }, 500)
 
     return () => clearTimeout(getData)
   }, [search])
@@ -63,7 +72,7 @@ function Dashboard() {
               onChange={(e) => setSearch(e.target.value)}
               className='w-full border border-amber-200 rounded-lg p-3 pl-4 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent'
               type="text"
-              placeholder='Search users by name...'
+              placeholder='Search users by name to transfer money.'
             />
           </div>
 
